@@ -7,7 +7,7 @@
 <body>
     <div class="container">
         <h1><a href='/'>PDF Compression</a></h1>
-        <form action="/compress" method="post" enctype="multipart/form-data">
+        <form action="/compress" method="post" enctype="multipart/form-data" id="compressForm">
             <div class="form-card">
                 <input type="file" name="file_compress" id="file_compress">
                 <br><br>
@@ -21,6 +21,7 @@
                 <br><br>
                 <span id="file-error" style="color:#fc00ff; display:none;"></span>
                 <input type="submit" value="Compress" id="submit_btn" class="compress-btn" disabled>
+                <div id="progress-message" style="display:none; color:#fff; margin-top:18px; font-size:1.1em; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">Compressing your PDF, please wait...</div>
             </div>
         </form>
     </div>
@@ -28,12 +29,14 @@
         const fileInput = document.getElementById('file_compress');
         const errorSpan = document.getElementById('file-error');
         const submitBtn = document.getElementById('submit_btn');
+        const form = document.getElementById('compressForm');
+        const progressMsg = document.getElementById('progress-message');
         submitBtn.disabled = true;
         fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                if (file.size > 200 * 1024 * 1024) { // 200MB
-                    errorSpan.textContent = 'File size exceeds 200MB limit.';
+                if (file.size > 100 * 1024 * 1024) { // 200MB
+                    errorSpan.textContent = 'File size exceeds 100MB limit.';
                     errorSpan.style.display = 'inline';
                     submitBtn.disabled = true;
                 } else {
@@ -45,22 +48,42 @@
                 submitBtn.disabled = true;
             }
         });
+        form.addEventListener('submit', function(e) {
+            submitBtn.disabled = true;
+            progressMsg.style.display = 'block';
+        });
     </script>
 </body>
+<footer class="site-footer">
+    &copy; 2025 Abhijai Chugh. All Rights Reserved.
+</footer>
 <style>
+    html {
+        box-sizing: border-box;
+        min-height: 100%;
+    }
     body {
+        box-sizing: border-box;
         background: linear-gradient(135deg, #fc00ff 0%, #00dbde 100%);
         font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
         margin: 0;
-        min-height: 100vh;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 48px;
+        position: relative;
     }
     .container {
         max-width: 500px;
-        margin: 40px auto;
+        width: 100%;
+        margin: 0 auto;
         background: #181818;
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(252,0,255,0.2);
         padding: 32px 24px;
+        box-sizing: border-box;
     }
     h1 {
         text-align: center;
@@ -125,6 +148,21 @@
     #file-error {
         font-weight: bold;
         text-shadow: 0 0 8px #fc00ff;
+    }
+    .site-footer {
+        width: 100vw;
+        text-align: center;
+        color: #fff;
+        font-size: 0.95em;
+        opacity: 0.8;
+        letter-spacing: 0.5px;
+        background: none;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 12px 0 8px 0;
+        z-index: 10;
+        pointer-events: none;
     }
 </style>
 </html>

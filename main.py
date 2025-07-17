@@ -34,9 +34,9 @@ def compress():
         except:
             os.system('sudo apt-get install ghostscript -y')
         finally:
-            os.system(f'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS={compression_level} -dNOPAUSE -dBATCH -sOutputFile={nam}_Compressed.pdf {nam}')
+            os.system(f'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS={compression_level} -dNOPAUSE -dBATCH -sOutputFile={nam[:-4]}_Compressed.pdf {nam}')
         size_original = os.path.getsize(nam)
-        size_compressed = os.path.getsize(f'{nam}_Compressed.pdf')
+        size_compressed = os.path.getsize(f'{nam[:-4]}_Compressed.pdf')
 
     return render_template('download.html', previous_size = size_original, compressed_size = size_compressed)
 
@@ -45,7 +45,7 @@ def uploader():
     if request.method == 'POST':
         with open("name.txt", "r") as text_file:
             nam = text_file.read()
-        file_path = f'{nam}_Compressed.pdf'
+        file_path = f'{nam[:-4]}_Compressed.pdf'
         response = send_file(file_path, as_attachment=True)
         # Remove both original and compressed files after sending
         try:
