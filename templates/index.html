@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Compression</title>
+</head>
+<body>
+    <div class="container">
+        <h1><a href='/'>PDF Compression</a></h1>
+        <form action="/compress" method="post" enctype="multipart/form-data">
+            <div class="form-card">
+                <input type="file" name="file_compress" id="file_compress">
+                <br><br>
+                <label for="compression_level">Compression Level:</label>
+                <select name="compression_level" id="compression_level">
+                    <option value="/screen">Maximum Compression (Low Quality)</option>
+                    <option value="/ebook">Medium Compression (Medium Quality)</option>
+                    <option value="/printer">High Quality (Larger Size)</option>
+                    <option value="/prepress">Best Quality (Largest Size)</option>
+                </select>
+                <br><br>
+                <span id="file-error" style="color:#fc00ff; display:none;"></span>
+                <input type="submit" value="Compress" id="submit_btn" class="compress-btn" disabled>
+            </div>
+        </form>
+    </div>
+    <script>
+        const fileInput = document.getElementById('file_compress');
+        const errorSpan = document.getElementById('file-error');
+        const submitBtn = document.getElementById('submit_btn');
+        submitBtn.disabled = true;
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (file.size > 200 * 1024 * 1024) { // 200MB
+                    errorSpan.textContent = 'File size exceeds 200MB limit.';
+                    errorSpan.style.display = 'inline';
+                    submitBtn.disabled = true;
+                } else {
+                    errorSpan.textContent = '';
+                    errorSpan.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            } else {
+                submitBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+<style>
+    body {
+        background: linear-gradient(135deg, #fc00ff 0%, #00dbde 100%);
+        font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #181818;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(252,0,255,0.2);
+        padding: 32px 24px;
+    }
+    h1 {
+        text-align: center;
+        color: #fff !important;
+        background: none !important;
+        margin-bottom: 16px;
+        font-size: 2.5em;
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+    h1 a {
+        color: #fff !important;
+        text-decoration: none !important;
+    }
+    .form-card {
+        text-align: center;
+    }
+    label {
+        color: #00dbde;
+        font-weight: bold;
+        text-shadow: 0 0 8px #fc00ff;
+    }
+    input[type=file] {
+        padding: 10px;
+        background: #181818;
+        color: #39ff14;
+        border: 2px solid #fc00ff;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 20px;
+        box-shadow: 0 0 8px #39ff14;
+    }
+    input[type=file]:hover {
+        background: #fc00ff;
+        color: #fff;
+    }
+    select {
+        padding: 8px;
+        border-radius: 8px;
+        border: 2px solid #00dbde;
+        background: #181818;
+        color: #00dbde;
+        font-size: 18px;
+        box-shadow: 0 0 8px #00dbde;
+    }
+    .compress-btn {
+        padding: 12px 28px;
+        background: linear-gradient(90deg, #fc00ff 0%, #00dbde 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-shadow: 0 2px 8px #fc00ff;
+        transition: background 0.3s;
+        text-shadow: 0 0 8px #00dbde;
+    }
+    .compress-btn:hover {
+        background: linear-gradient(90deg, #00dbde 0%, #fc00ff 100%);
+    }
+    #file-error {
+        font-weight: bold;
+        text-shadow: 0 0 8px #fc00ff;
+    }
+</style>
+</html>

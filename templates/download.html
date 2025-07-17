@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Compression</title>
+</head>
+<body>
+    <div class="container">
+        <h1><a href='/'>PDF Compression</a></h1>
+        <div class="result-card">
+            <h2>Compression Results</h2>
+            <p><span class="size-label">Original Size:</span> <span class="size">{{previous_size // 1024}} KB</span></p>
+            {% set reduction = ((previous_size - compressed_size) / previous_size * 100) if previous_size > 0 else 0 %}
+            {% if compressed_size >= previous_size %}
+                <p class="highlight" style="color:#ff3c3c; text-shadow:0 0 8px #fc00ff;">Sorry, we couldn't compress your PDF. Please try another compression level!</p>
+                <p class="fact">
+                    Want to see how this works? <br>
+                    <a href="https://github.com/AbJ-1729/PDF-Size-Reducer" target="_blank" class="github-link">Check out the source code on GitHub</a> and consider contributing to make this project even better!
+                </p>
+            {% else %}
+                <p><span class="size-label">Compressed Size:</span> <span class="size">{{compressed_size // 1024}} KB</span></p>
+                <p class="highlight">Your PDF size reduced by <b>{{'%.2f' % reduction}}%</b>!</p>
+                <p class="fact">
+                    Want to see how this works? <br>
+                    <a href="https://github.com/AbJ-1729/PDF-Size-Reducer" target="_blank" class="github-link">Check out the source code on GitHub</a> and consider contributing to make this project even better!
+                </p>
+            {% endif %}
+            <form action="/download" method="post">
+                <input type="submit" value="Download Compressed PDF" class="download-btn">
+            </form>
+        </div>
+    </div>
+</body>
+<style>
+    body {
+        background: linear-gradient(135deg, #fc00ff 0%, #00dbde 100%);
+        font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #181818;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(252,0,255,0.2);
+        padding: 32px 24px;
+    }
+    h1 {
+        text-align: center;
+        color: #fff !important;
+        background: none !important;
+        margin-bottom: 16px;
+        font-size: 2.5em;
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+    h1 a {
+        color: #fff !important;
+        text-decoration: none !important;
+    }
+    .result-card {
+        text-align: center;
+    }
+    h2 {
+        color: #00dbde;
+        margin-bottom: 12px;
+        text-shadow: 0 0 8px #fc00ff;
+    }
+    .size-label {
+        color: #fff200;
+        font-weight: bold;
+        text-shadow: 0 0 8px #fc00ff, 0 0 4px #00dbde;
+        font-size: 1.1em;
+    }
+    .size {
+        font-weight: bold;
+        color: #39ff14;
+        text-shadow: 0 0 8px #39ff14;
+    }
+    .highlight {
+        font-size: 1.2em;
+        color: #fc00ff;
+        margin: 18px 0 10px 0;
+        text-shadow: 0 0 8px #00dbde;
+    }
+    .fact {
+        background: #00dbde;
+        color: #181818;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 18px;
+        font-size: 1em;
+        box-shadow: 0 0 8px #fc00ff;
+    }
+    .github-link {
+        color: #fff200;
+        font-weight: bold;
+        text-shadow: 0 0 8px #fc00ff, 0 0 4px #00dbde;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+    .github-link:hover {
+        color: #39ff14;
+    }
+    .download-btn {
+        padding: 12px 28px;
+        background: linear-gradient(90deg, #fc00ff 0%, #00dbde 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-shadow: 0 2px 8px #fc00ff;
+        transition: background 0.3s;
+        text-shadow: 0 0 8px #00dbde;
+    }
+    .download-btn:hover {
+        background: linear-gradient(90deg, #00dbde 0%, #fc00ff 100%);
+    }
+</style>
+</html>
+

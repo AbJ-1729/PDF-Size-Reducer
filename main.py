@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, send_file
-#from werkzeug.utils import secure_filename
 import os
 import glob
-import get_token
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200 MB
 
 @app.route('/', methods = ['GET', 'POST'])
 def home():
@@ -24,6 +23,7 @@ def compress():
     if request.method == 'POST':
         global nam
         f = request.files['file_compress']
+        compression_level = request.form.get('compression_level', '/screen')
         nam = f.filename.replace(" ", "_")
         with open("name.txt", "w") as text_file:
             text_file.write(nam)
@@ -34,8 +34,7 @@ def compress():
         except:
             os.system('sudo apt-get install ghostscript -y')
         finally:
-            os.system('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -dBATCH -sOutputFile=' +nam + '_Compressed.pdf ' + nam)
-            #os.system('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sOutputFile=' +nam + '_Compressed.pdf ' + nam)
+            os.system(f'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS={compression_level} -dNOPAUSE -dBATCH -sOutputFile={nam}_Compressed.pdf {nam}')
         size_original = os.path.getsize(nam)
         size_compressed = os.path.getsize(f'{nam}_Compressed.pdf')
 
@@ -46,7 +45,22 @@ def uploader():
     if request.method == 'POST':
         with open("name.txt", "r") as text_file:
             nam = text_file.read()
-        return send_file(f'/home/smarthub/{nam}_Compressed.pdf', as_attachment=True)
+        file_path = f'{nam}_Compressed.pdf'
+        response = send_file(file_path, as_attachment=True)
+        # Remove both original and compressed files after sending
+        try:
+            os.remove(nam)
+        except Exception:
+            pass
+        try:
+            os.remove(file_path)
+        except Exception:
+            pass
+        try:
+            os.remove("name.txt")
+        except Exception:
+            pass
+        return response
 
-#if __name__ == '__main__':
-#    app.run(debug = True)
+if __name__ == '__main__':
+   app.run(debug = True)
