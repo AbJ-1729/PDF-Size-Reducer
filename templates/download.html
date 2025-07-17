@@ -13,10 +13,10 @@
             {% set reduction = ((previous_size - compressed_size) / previous_size * 100) if previous_size > 0 else 0 %}
             {% if compressed_size >= previous_size %}
                 <p class="highlight" style="color:#ff3c3c; text-shadow:0 0 8px #fc00ff;">Sorry, we couldn't compress your PDF. Please try another compression level!</p>
-                <p class="fact">
-                    Want to see how this works? <br>
-                    <a href="https://github.com/AbJ-1729/PDF-Size-Reducer" target="_blank" class="github-link">Check out the source code on GitHub</a> and consider contributing to make this project even better!
-                </p>
+{#                <p class="fact">#}
+{#                    Want to see how this works? <br>#}
+{#                    <a href="https://github.com/AbJ-1729/PDF-Size-Reducer" target="_blank" class="github-link">Check out the source code on GitHub</a> and consider contributing to make this project even better!#}
+{#                </p>#}
             {% else %}
                 <p><span class="size-label">Compressed Size:</span> <span class="size">{{compressed_size // 1024}} KB</span></p>
                 <p class="highlight">Your PDF size reduced by <b>{{'%.2f' % reduction}}%</b>!</p>
@@ -24,10 +24,10 @@
                     Want to see how this works? <br>
                     <a href="https://github.com/AbJ-1729/PDF-Size-Reducer" target="_blank" class="github-link">Check out the source code on GitHub</a> and consider contributing to make this project even better!
                 </p>
+                <form action="/download" method="post">
+                    <input type="submit" value="Download Compressed PDF" class="download-btn">
+                </form>
             {% endif %}
-            <form action="/download" method="post">
-                <input type="submit" value="Download Compressed PDF" class="download-btn">
-            </form>
         </div>
     </div>
 </body>
