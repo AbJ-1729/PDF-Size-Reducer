@@ -22,9 +22,10 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} << 'EOF'
-          cd /home/abj/PDF-Size-Reducer
-          git reset --hard origin/main
-          source venv/bin/activate
-          pip install -r requirements.txt
+          cd /home/abj/PDF-Size-Reducer &&
+          git fetch origin &&
+          git reset --hard origin/main &&
+          source venv/bin/activate &&
+          pip install -r requirements.txt &&
           sudo systemctl restart flaskapp
         EOF
