@@ -20,36 +20,38 @@ def upload():
 
 @app.route('/compress', methods = ['POST'])
 def compress():
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     if request.method == 'POST':
         global nam
         f = request.files['file_compress']
         compression_level = request.form.get('compression_level', '/screen')
         nam = f.filename.replace(" ", "_")
-        with open("name.txt", "w") as text_file:
+        with open(os.path.join(BASE_DIR, "name.txt"), "w") as text_file:
             text_file.write(nam)
         f.save(nam)
         print(f"Executing in {os.getcwd()}")
         try:
-            os.system('gs -h')
+            os.system('/usr/bin/gs -h')
         except:
             os.system('sudo apt-get install ghostscript -y')
         finally:
-            os.system(f'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS={compression_level} -dNOPAUSE -dBATCH -sOutputFile={nam[:-4]}_Compressed.pdf {nam}')
+            os.system(f'/usr/bin/gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS={compression_level} -dNOPAUSE -dBATCH -sOutputFile={nam[:-4]}_Compressed.pdf {nam}')
         size_original = os.path.getsize(nam)
-        size_compressed = os.path.getsize(f'{nam[:-4]}_Compressed.pdf')
+        size_compressed = os.path.getsize(os.path.join(BASE_DIR, f'{nam[:-4]}_Compressed.pdf'))
 
     return render_template('download.html', previous_size = size_original, compressed_size = size_compressed)
 
 @app.route('/download', methods = ['GET', 'POST'])
 def uploader():
     if request.method == 'POST':
-        with open("name.txt", "r") as text_file:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(BASE_DIR, "name.txt"), "r") as text_file:
             nam = text_file.read()
-        file_path = f'{nam[:-4]}_Compressed.pdf'
+        file_path = os.path.join(BASE_DIR, f'{nam[:-4]}_Compressed.pdf')
         response = send_file(file_path, as_attachment=True)
         # Remove both original and compressed files after sending
         try:
-            os.remove(nam)
+            os.remove(os.path.join(BASE_DIR, nam))
         except Exception:
             pass
         try:
@@ -57,10 +59,10 @@ def uploader():
         except Exception:
             pass
         try:
-            os.remove("name.txt")
+            os.remove(os.path.join(BASE_DIR,"name.txt"))
         except Exception:
             pass
         return response
 
 if __name__ == '__main__':
-   app.run(debug = True)
+   app.run(host='0.0.0.0', port=5000, debug=True)
