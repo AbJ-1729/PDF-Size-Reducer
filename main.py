@@ -24,6 +24,9 @@ def compress():
     if request.method == 'POST':
         global nam
         f = request.files['file_compress']
+        # Server-side PDF validation
+        if not f.filename.lower().endswith('.pdf') or f.mimetype != 'application/pdf':
+            return render_template('index.html', error="Please upload a valid PDF file.")
         compression_level = request.form.get('compression_level', '/screen')
         nam = f.filename.replace(" ", "_")
         with open(os.path.join(BASE_DIR, "name.txt"), "w") as text_file:
