@@ -24,9 +24,17 @@
                     Want to see how this works? <br>
                     <a href="https://github.com/AbJ-1729/PDF-Size-Reducer" target="_blank" class="github-link">Check out the source code on GitHub</a> and consider contributing to make this project even better!
                 </p>
-                <form action="/download" method="post">
+                <form action="/download" method="post" target="downloadFrame" id="downloadForm">
                     <input type="submit" value="Download Compressed PDF" class="download-btn">
                 </form>
+                <iframe name="downloadFrame" style="display:none;"></iframe>
+                <script>
+                    document.getElementById('downloadForm').addEventListener('submit', function(e) {
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 1500); // Redirect after 1.5 seconds
+                    });
+                </script>
             {% endif %}
         </div>
     </div>
